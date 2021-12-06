@@ -64,6 +64,7 @@ purple = (102,0,102)
 yellow = (255,255,0)
 fps = 30
 resume = True
+exg = False
 
 #Game specific fungtions
 
@@ -92,9 +93,14 @@ def settings():
     global CC
     global Con
     global SC
-
+    global resume
+    
     def ResetHS():
-        if messagebox.askokcancel('CONFIRM','Do you really want to Reset Your Highscore?'):
+        with open("resources/HighScore.txt", "r") as f:
+            hisc = int(f.read())
+        if not resume or exg:
+            messagebox.showinfo("Detected In game","Please try again from home screan to reset High Score!")
+        elif messagebox.askokcancel('CONFIRM',f'Do you really want to Reset Your Highscore? Your Current Highscore is {hisc}'):
             with open("resources/HighScore.txt", "w") as f:
                 f.write('0')
             gameloop.highscore=0
@@ -263,7 +269,6 @@ def settings():
     CC_1 = Radiobutton(root,text='Enable',font=('Helvetica',10,'bold'),bg="Gray55",value=1 , variable = CCV)
 
     HSR = Button(root, text="Reset",width=8,height=1,relief=RIDGE,bd=4,command = ResetHS)
-    text_lm = Label(root, text="(only works when opened from home page)" , bg="Gray55")
 
     SC_1 = Radiobutton(root,text='Red',font=('Helvetica',10,'bold'),bg="Gray55",value=1 , variable = SCV)
     SC_2 = Radiobutton(root,text='Blue',font=('Helvetica',10,'bold'),bg="Gray55",value=2 , variable = SCV)
@@ -284,7 +289,6 @@ def settings():
     CC_1.grid(row=4,column=2,sticky=W)
 
     HSR.grid(row=6,column=1,sticky=W)
-    text_lm.grid(row=6,column=2,sticky=W)
 
     SC_1.grid(row=8,column=1,sticky=W)
     SC_2.grid(row=8,column=2,sticky=W)
@@ -363,8 +367,10 @@ def welcome():
 
 #Game loop
 def gameloop():
+    global exg
     #game specific variables
     exit_game = False
+    exg = True
     game_over = False
     score = 0
     ka = 1
