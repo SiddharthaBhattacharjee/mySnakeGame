@@ -7,11 +7,7 @@ from tkinter import messagebox
 import webbrowser
 import os
 
-try:
-    import  mysql.connector as MC
-except:
-    subprocess.run(['pip','install','mysql-connector-python'])
-    import mysql.connector as MC
+
 
 try:
     import  pygame
@@ -28,93 +24,8 @@ except:
     with open("resources/pw.txt", "w") as g:
         g.write(pw)
 
-db="snake"
-try:
-    mydb = MC.connect(host="localhost",user="root",passwd=pw)
-    mycursor = mydb.cursor()
-    mycursor.execute("CREATE DATABASE if not exists snake")
-    mydb.close()
-except Exception as exc:
-    print("Connection failed 1 !")
-    print("ERROR : ",exc)
-try:
-    Con_o = MC.connect(host="localhost",user="root",passwd=pw,database=db)
-    if Con_o.is_connected():
-        pass
-
-except Exception as e:
-    print("Connection Failed !")
-    print("ERROR : ",e)
-try:
-    Cur = Con_o.cursor()
-    st = "create table data(name VARCHAR(20) PRIMARY KEY, value INT(11) NOT NULL);"
-    Cur.execute(st)
-    Con_o.commit()
-
-
-    Cur = Con_o.cursor()
-    st = "insert into data(name,value) values('velocity',8)"
-    Cur.execute(st)
-    Con_o.commit()
-
-
-    Cur = Con_o.cursor()
-    st = "insert into data(name,value) values('CheatCodes',0)"
-    Cur.execute(st)
-    Con_o.commit()
-
-
-    Cur = Con_o.cursor()
-    st = "insert into data(name,value) values('snake_colour',1)"
-    Cur.execute(st)
-    Con_o.commit()
-
-
-    Cur = Con_o.cursor()
-    st = "insert into data(name,value) values('HighScore',0)"
-    Cur.execute(st)
-    Con_o.commit()
-    Con_o.close()
-except Exception as e:
-    print("Data base found",e)
-
-def data_w(name,value):
-    try:
-        Con_o = MC.connect(host="localhost",user="root",passwd=pw,database=db)
-        if Con_o.is_connected():
-            pass
-
-    except Exception as e:
-        print("Connection Failed !")
-        print("ERROR : ",e)
-
-    Cur = Con_o.cursor()
-    st = "UPDATE data SET value = "+str(value)+" WHERE name = '"+str(name)+"';"
-    Cur.execute(st)
-    Con_o.commit()
-    Con_o.close()
-
-def data_r(name):
-    try:
-        Con_o = MC.connect(host="localhost",user="root",passwd=pw,database=db)
-        if Con_o.is_connected():
-            pass
-    except Exception as e:
-        print("Connection Failed !")
-        print("ERROR : ",e)
-
-    Cur = Con_o.cursor()
-    st = "SELECT value FROM data WHERE name = '"+str(name)+"';"
-    Cur.execute(st)
-    val = Cur.fetchall()
-    Con_o.commit()
-    Con_o.close()
-    value = (val[0])[0]
-    return value
-
-
 #File Backups
-'''
+
 if (not os.path.exists('resources/CheatCodes.txt')):
     with open("resources/CheatCodes.txt", "w") as q:
         q.write("0")
@@ -130,11 +41,11 @@ if (not os.path.exists('resources/snake_colour.txt')):
 if (not os.path.exists('resources/velocity.txt')):
     with open("resources/velocity.txt", "w") as u:
         u.write("8")
-'''
+
 
 
 #Global Variables to be changed
-'''
+
 with open("resources/velocity.txt", "r") as g:
     init_velocity = int(g.read())
 
@@ -143,12 +54,6 @@ with open("resources/CheatCodes.txt", "r") as h:
 
 with open("resources/snake_colour.txt", "r") as i:
     SC = int(i.read())
-'''
-
-#New database portion
-init_velocity = data_r('velocity')
-CC = data_r('CheatCodes')
-SC = data_r('snake_colour')
 
 white = (255,255,255)
 red = (255,0,0)
@@ -188,17 +93,12 @@ def settings():
     global Con
     global SC
 
-    init_velocity = data_r('velocity')
-    CC = data_r('CheatCodes')
-    SC = data_r('snake_colour')
-
     def ResetHS():
         #change
-        '''
         if messagebox.askokcancel('CONFIRM','Do you really want to Reset Your Highscore?'):
             with open("resources/HighScore.txt", "w") as f:
-                f.write('0')'''
-        data_w('HighScore',0) #New database dungtion
+                f.write('0')
+       # data_w('HighScore',0) #New database dungtion
 
     def Restore():
         global init_velocity
@@ -209,7 +109,6 @@ def settings():
             init_velocity = 8
 
             #change
-            '''
             with open("resources/velocity.txt", "w") as g:
                 g.write('8')
             GDV.set(2)
@@ -221,13 +120,6 @@ def settings():
 
             with open("resources/snake_colour.txt", "w") as i:
                 i.write('1')
-            SCV.set(1)'''
-            #new database fungtion
-            data_w('velocity',8)
-            GDV.set(2)
-            data_w('CheatCodes',0)
-            CCV.set(0)
-            data_w('snake_colour',1)
             SCV.set(1)
 
     def Confirm():
@@ -240,61 +132,61 @@ def settings():
 
             if mode == 1:
                 init_velocity = 4
-                '''with open("resources/velocity.txt", "w") as g:
-                    g.write('4')'''
-                data_w('velocity',4)
+                with open("resources/velocity.txt", "w") as g:
+                    g.write('4')
+                #data_w('velocity',4)
             if mode == 2:
                 init_velocity = 8
-                '''with open("resources/velocity.txt", "w") as g:
-                    g.write('8')'''
-                data_w('velocity',8)
+                with open("resources/velocity.txt", "w") as g:
+                    g.write('8')
+                #data_w('velocity',8)
             if mode == 3:
-                '''with open("resources/velocity.txt", "w") as g:
-                    g.write('12')'''
+                with open("resources/velocity.txt", "w") as g:
+                    g.write('12')
                 init_velocity = 12
-                data_w('velocity',12)
+                #data_w('velocity',12)
 
             if cheat == 0:
                 CC = 0
-                '''with open("resources/CheatCodes.txt", "w") as h:
-                    h.write('0')'''
-                data_w('CheatCodes',0)
+                with open("resources/CheatCodes.txt", "w") as h:
+                    h.write('0')
+                #data_w('CheatCodes',0)
             if cheat == 1:
                 CC = 1
-                '''with open("resources/CheatCodes.txt", "w") as h:
-                    h.write('1')'''
-                data_w('CheatCodes',1)
+                with open("resources/CheatCodes.txt", "w") as h:
+                    h.write('1')
+                #data_w('CheatCodes',1)
 
             if SColor == 1:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('1')'''
-                data_w('snake_colour',1)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('1')
+                #data_w('snake_colour',1)
                 SC = 1
 
             if SColor == 2:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('2')'''
-                data_w('snake_colour',2)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('2')
+                #data_w('snake_colour',2)
                 SC = 2
             if SColor == 3:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('3')'''
-                data_w('snake_colour',3)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('3')
+                #data_w('snake_colour',3)
                 SC = 3
             if SColor == 4:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('4')'''
-                data_w('snake_colour',4)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('4')
+                #data_w('snake_colour',4)
                 SC = 4
             if SColor == 5:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('5')'''
-                data_w('snake_colour',5)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('5')
+                #data_w('snake_colour',5)
                 SC = 5
             if SColor == 6:
-                '''with open("resources/snake_colour.txt", "w") as i:
-                    i.write('6')'''
-                data_w('snake_colour',6)
+                with open("resources/snake_colour.txt", "w") as i:
+                    i.write('6')
+                #data_w('snake_colour',6)
                 SC = 6
 
 
@@ -446,13 +338,13 @@ def welcome():
                         settings()
 
                     if 20+40 > mouse[0] > 20  and screen_height-50+40 > mouse[1] > screen_height-50:
-                        web('https://www.facebook.com/sanjaybhattacharjee.sanju')
+                        web('https://linktr.ee/SiddharthaBhattacharjee')
                     if 80+40 > mouse[0] > 80  and screen_height-50+40 > mouse[1] > screen_height-50:
-                        web('mailto:siddharthabhatt3456@gmail.com')
+                        web('mailto:siddharthabhatt2345@gmail.com')
                     if 140+40 > mouse[0] > 140  and screen_height-50+40 > mouse[1] > screen_height-50:
-                        web('https://www.instagram.com/progamersid_x/')
+                        web('https://www.instagram.com/programmer_sid/')
                     if 200+40 > mouse[0] > 200  and screen_height-50+40 > mouse[1] > screen_height-50:
-                        web('https://twitter.com/Sanjayb87300198')
+                        web('https://twitter.com/Siddhar2345')
 
         blink_i += 1
 
@@ -476,10 +368,9 @@ def gameloop():
     score = 0
     ka = 1
     #change
-    '''
     with open("resources/HighScore.txt", "r") as f:
-        highscore = int(f.read())'''
-    highscore = data_r('HighScore')
+        highscore = int(f.read())
+    #highscore = data_r('HighScore')
 
     score_str = "SCORE : 0" + "  HIGHSCORE :" + str(highscore)
 
@@ -496,10 +387,9 @@ def gameloop():
     global resume
 
     #colour defining Statement change
-    '''
     with open("resources/snake_colour.txt", "r") as i:
-        SC_f = int(i.read())'''
-    SC_f = data_r('snake_colour')
+        SC_f = int(i.read())
+    #SC_f = data_r('snake_colour')
 
     if SC_f == 1:
         snake_color = red
@@ -561,9 +451,8 @@ def gameloop():
 
         if game_over:
 
-            '''with open("resources/HighScore.txt", "w") as f:
-                f.write(str(highscore))''' #change
-            data_w('HighScore',highscore)
+            with open("resources/HighScore.txt", "w") as f:
+                f.write(str(highscore))#change
 
             gameWindow.fill(black)
             screen_title("GAME OVER !", red,140, int(screen_height/2)-70)
