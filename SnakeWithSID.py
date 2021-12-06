@@ -94,11 +94,10 @@ def settings():
     global SC
 
     def ResetHS():
-        #change
         if messagebox.askokcancel('CONFIRM','Do you really want to Reset Your Highscore?'):
             with open("resources/HighScore.txt", "w") as f:
                 f.write('0')
-       # data_w('HighScore',0) #New database dungtion
+            gameloop.highscore=0
 
     def Restore():
         global init_velocity
@@ -264,6 +263,7 @@ def settings():
     CC_1 = Radiobutton(root,text='Enable',font=('Helvetica',10,'bold'),bg="Gray55",value=1 , variable = CCV)
 
     HSR = Button(root, text="Reset",width=8,height=1,relief=RIDGE,bd=4,command = ResetHS)
+    text_lm = Label(root, text="(only works when opened from home page)" , bg="Gray55")
 
     SC_1 = Radiobutton(root,text='Red',font=('Helvetica',10,'bold'),bg="Gray55",value=1 , variable = SCV)
     SC_2 = Radiobutton(root,text='Blue',font=('Helvetica',10,'bold'),bg="Gray55",value=2 , variable = SCV)
@@ -284,6 +284,7 @@ def settings():
     CC_1.grid(row=4,column=2,sticky=W)
 
     HSR.grid(row=6,column=1,sticky=W)
+    text_lm.grid(row=6,column=2,sticky=W)
 
     SC_1.grid(row=8,column=1,sticky=W)
     SC_2.grid(row=8,column=2,sticky=W)
@@ -370,7 +371,6 @@ def gameloop():
     #change
     with open("resources/HighScore.txt", "r") as f:
         highscore = int(f.read())
-    #highscore = data_r('HighScore')
 
     score_str = "SCORE : 0" + "  HIGHSCORE :" + str(highscore)
 
